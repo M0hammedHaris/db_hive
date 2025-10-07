@@ -1,0 +1,3 @@
+# Background Context
+
+DB Hive addresses the common pain of repetitive, error-prone SQL work in enterprise settings by combining an accessible visual query builder, SSH-backed secure connections, and LLM-assisted guidance. Target users are developers and data analysts who need quick, secure access to data without deep SQL expertise; a secondary user segment includes non-technical analysts who require a simpler exploration interface. The MVP focuses on delivering a secure connection mechanism, an approachable visual query editor, offline schema support for sensitive workflows, and basic AI help to reduce errors and accelerate query authoring.
