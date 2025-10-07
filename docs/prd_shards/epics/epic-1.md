@@ -70,3 +70,13 @@ The following stories are sequential, vertical slices that together deliver an e
 - Automated integration test covering the canary path passes on main/staging.
 - README includes how to run the canary locally and how to reproduce the simulated flows.
 - Basic telemetry visible for the canary metrics defined in the PRD.
+
+## Story 1.8 (Spike): Long-running Query Strategy & Secrets Handling
+
+- Description: Run a 2–3 day architecture spike to evaluate serverless function limits, background worker options (Fargate/Cloud Run), secrets store options (AWS Secrets Manager vs Vercel env), and recommend a short design decision with operational trade-offs.
+- Acceptance Criteria:
+  - Documented recommendation: serverless-only vs hybrid approach, with pros/cons and cost/operational implications.
+  - Draft design for secrets handling (client-side key upload flow, server-side storage, rotation procedure).
+  - Short runbook for handling long query timeouts and background job patterns.
+
+Estimate: 2–3 days

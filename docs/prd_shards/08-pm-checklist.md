@@ -91,6 +91,24 @@
 
 3. Specify default audit retention (e.g., 90 days for prompts, 365 days for audit metadata, configurable per-org) and add a retention job story in Epic 5.
 
+### Retention Defaults (PROPOSED)
+
+Suggested org-default retention windows (configurable per-org):
+
+- LLM prompts & generated results: 90 days
+- Audit metadata (connection events, query hashes, exports): 365 days
+- Snapshots (exported result snapshots): 365 days (configurable for legal/compliance needs)
+
+Add a new story under Epic 5 (Audit Logging / Retention):
+
+### Story 5.9: Retention Job & Policy Enforcement
+
+- Retention job runs on schedule and deletes data older than configured windows.
+- Retention events are recorded in the audit log with metadata (time window, records deleted, job run id).
+- Admin UI shows current retention settings and last run status.
+
+Estimate: 1 day
+
 4. Split any large stories in Epic 2 and 3 into smaller vertical slices to make scope predictable for a solo developer.
 
 5. Run a short architecture spike (2–3 days) to evaluate serverless vs hybrid background workers for long-running queries and to draft a secrets management design.
@@ -104,6 +122,14 @@
 - Add concrete LLM budget defaults and retention numbers to the PRD (I can apply these changes if you want).
 
 - Schedule an architecture spike for long-running queries and secrets handling (assign to architect/engineer).
+
+### User Research Micro‑Sprint (1 week)
+
+- Goal: Validate core UX assumptions for the visual query builder and connection onboarding with 3–5 target users.
+- Activities: 3–5 remote interviews (30–45m), 1 remote moderated usability session on a Figma prototype, and synthesis of findings into 3 prioritized insights.
+- Success Criteria: At least 3 actionable usability issues identified and 1 validated design choice (e.g., connector flow or visual query affordance).
+- Timeline: 1 week (planning + sessions + synthesis).
+
 
 ## Final Decision
 

@@ -16,6 +16,20 @@
 - Secrets & Keys: Use a managed secret store (AWS Secrets Manager / Vercel Environment variables) with UI for connection secrets; support SSH key uploads with client-side encryption where feasible.
 - Deployment: Frontend to Vercel; serverless functions and background jobs to AWS/GCP serverless platforms depending on integration needs (e.g., long-running tasks may use Fargate or Cloud Run).
 
+### LLM Budget Defaults & Enforcement (PROPOSED)
+
+- Conservative default budgets (configurable per-org):
+	- Per-user: 10,000 tokens/day
+	- Per-org: 500,000 tokens/month
+
+- Enforcement behavior:
+	- Requests that would exceed the budget are rejected at the adapter layer with a clear UI message and an audit event (action: `llm.request.rejected`, reason: `budget_exceeded`).
+	- Fallback: when budgets are exhausted, the UI shows deterministic/manual tips and disables the "Generate" action; admins can set soft thresholds to warn users before hard rejects.
+
+- Telemetry: token usage is recorded per-request and attributed to user + org; token-usage metrics are available in the LLM Usage dashboard and trigger alerts when thresholds are hit.
+
+Rationale: conservative defaults give a safe starting point for cost control and can be revised after the canary and initial telemetry.
+
 ## Developer & Testing Notes
 
 - Local development: Provide a lightweight dev stack with mocked DB connectors and an offline-schema fixture for testing the visual builder without live connections.
