@@ -1,0 +1,33 @@
+%% DB Hive - Component diagram (Mermaid)
+%% Shows major frontend and backend components and their relationships
+
+graph TB
+  subgraph Frontend
+    UI[UI Shell - Next.js]
+  QueryBuilder[Query Builder Component - visual_spec in props]
+    Results[Results Viewer]
+    Connections[Connection Manager]
+  end
+
+  subgraph Services
+    API[App API - serverless]
+    Auth[Auth - Clerk]
+    LLM[LLM Adapter]
+  end
+
+  subgraph Storage
+    DB[(NeonDB - Postgres)]
+    Objects[(S3-Compatible Storage)]
+  end
+
+  UI -->|calls| API
+  QueryBuilder -->|onSave spec| API
+  Results -->|fetch results| API
+  API --> DB
+  API --> Objects
+  API --> LLM
+  API --> Auth
+  Auth --> API
+
+  classDef storage fill:#fff7ed,stroke:#b45309;
+  class DB,Objects storage;
