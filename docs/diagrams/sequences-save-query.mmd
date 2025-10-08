@@ -1,0 +1,18 @@
+%% DB Hive - Sequence diagram: Save Query + LLM Suggestion Flow
+sequenceDiagram
+  participant U as User
+  participant FE as Frontend
+  participant API as AppAPI
+  participant LLM as LLMAdapter
+  participant DB as Postgres
+
+  U->>FE: Click Save + Request Suggestion
+  FE->>API: POST /api/v1/saved-queries {visual_spec, requestSuggestion=true}
+  API->>DB: create SavedQuery - pending suggestion
+  API->>LLM: request suggestion - redacted spec
+  LLM-->>API: suggestion (diff or recommended changes)
+  API-->>FE: suggestion available
+  U->>FE: Accept suggestion
+  FE->>API: PATCH /api/v1/saved-queries/:id {applySuggestion: true}
+  API->>DB: update SavedQuery.visual_spec
+  API-->>FE: 200 OK {savedQuery}

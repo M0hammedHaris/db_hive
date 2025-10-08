@@ -1,0 +1,49 @@
+%% DB Hive - High-level architecture diagram (Mermaid)
+%% Render with mermaid live editor or mermaid-cli (mmdc)
+
+flowchart LR
+  subgraph FE [Frontend]
+    FEApp[Next.js App Router\nClient components\nTanStack Query + Zustand]
+  end
+
+  subgraph EDGE [Edge CDN]
+    Vercel[Vercel Edge Previews - CDN]
+  end
+
+  subgraph API [API Layer]
+    APIGW[Edge Functions - API Gateway]
+    AppAPI[App API - serverless Node]
+    Worker[Background Workers - Jobs]
+    LLM[LLM Adapter - provider-agnostic]
+  end
+
+  subgraph DATA [Persistence & Storage]
+    PG[(NeonDB - Postgres)]
+    S3[(S3-compatible Object Storage)]
+    Cache[(Redis - Edge Cache)]
+  end
+
+  Auth[Clerk - Auth Provider]
+  CI[GitHub Actions - Terraform - IaC]
+
+  Vercel --> FEApp
+  FEApp -->|HTTPS REST GraphQL| APIGW
+  APIGW --> AppAPI
+  AppAPI --> PG
+  AppAPI --> S3
+  AppAPI --> Cache
+  AppAPI --> Worker
+  AppAPI --> LLM
+  Worker --> PG
+  AppAPI --> Auth
+  Auth --> AppAPI
+  CI --> Vercel
+  CI --> AppAPI
+
+  classDef infra fill:#f3f4f6,stroke:#111,stroke-width:1px;
+  class CI,Auth infra;
+
+  %% Notes
+  %% - Frontend uses TanStack Query for server-state and Zustand for local UI state.
+  %% - Long-running query execution happens via Worker; results stored in Postgres and object storage for large exports.
+  %% - LLM requests routed through a provider-agnostic adapter in AppAPI that enforces redaction, budget and audit rules.
