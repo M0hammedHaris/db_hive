@@ -58,6 +58,15 @@ Areas needing validation / open questions:
 - Validate primary user device distribution (desktop vs tablet vs mobile).
 - Confirm enterprise needs for a Security Officer persona and depth of audit requirements.
 - Decide whether LLM assistance should default to off at org-level or opt-in per user by default.
+- MCP integration: APPROVED — the frontend team should use the agent-provided MCP located at `~/Library/Application Support/Code - Insiders/User/profiles/-984a0df/mcp.json`.
+  - Current PR: [PR #1](https://github.com/M0hammedHaris/db_hive/pull/1) — this spec update.
+  - Action (next steps once the frontend workspace is initialized):
+    1. Create branch `feat/mcp/integrate-storybook` from `chore/docs/front-end-spec/confirmations` or the latest `release/prd-v0.2`.
+    2. Initialize the frontend workspace (add `package.json`/tooling) if missing.
+    3. Scaffold Storybook and Tailwind config, register MCP components and add example stories that demonstrate accessibility and token compatibility.
+    4. Add automated a11y checks (axe-core) in Storybook stories and a minimal visual-regression step (Chromatic optional — keep OFF by default unless team requests it).
+    5. Open a follow-up PR titled `feat(mcp): integrate MCP and scaffold Storybook` linking back to this spec PR for traceability.
+- Chromatic / visual review: keep OFF by default; enable only if the team requests automated visual diffs.
 
 ---
 
@@ -293,11 +302,13 @@ Areas needing validation / open questions:
 ## Component Library / Design System — FINAL (CONFIRMED)
 
 - Chosen stack: `shadcn/ui` + Tailwind CSS (confirmed).
-- MCP integration: Owner will provide MCP package location; frontend team to integrate MCP into workspace and vet components.
-- Storybook as source-of-truth: Use Storybook + Chromatic + axe for design/visual QA since there is no Figma yet. Create a minimal Figma token file only if/when stakeholders request high-fidelity prototypes.
+- MCP integration: The MCP will be included as part of the agent (owner-managed). The frontend team will integrate the MCP into the workspace and vet components for accessibility and token compatibility. If the MCP proves helpful, proceed with full integration and Storybook registration.
+- Chromatic / visual review: Enable Chromatic for Storybook if visual review automation is desired; otherwise use Storybook + manual review. (Chromatic is optional — enable it only if the team wants automated visual diffs.)
 
-Action items (added):
-- Please provide the MCP package path or registry location so the frontend team can start integration.
+Action items (updated):
+- MCP location: `~/Library/Application Support/Code - Insiders/User/profiles/-984a0df/mcp.json` (agent-managed). Frontend team can pull the MCP from this path in the agent workspace and begin integration and Storybook registration when authorized.
+- Confirm whether to enable Chromatic for automated visual-review; default plan: keep Chromatic off until team confirms.
+- Next step after MCP availability: Storybook scaffolding and MCP component registration are deferred until the project has been initialized. Once the frontend workspace is initialized and the MCP path is accessible, the team will scaffold Storybook, add MCP stories, and enable a11y/visual checks as a follow-up task.
 
 ---
 
@@ -409,11 +420,16 @@ Detailed rationale, trade-offs & assumptions:
 
 - Tokenized breakpoints: Implement breakpoints as tokens in the design system to ensure parity between Figma and code and to simplify responsive behavior in components.
 
-Areas needing validation / open questions:
+Areas needing validation / open questions (updated):
 
-- Confirm prioritized device mix and whether mobile deserves an early lightweight experience or can be deferred to post-MVP.
-- Decide on strict breakpoint values or use content-driven breakpoints (i.e., break when a component layout breaks rather than fixed pixel widths).
-- Confirm whether certain heavy features (inline charting, large exports) should be blocked on mobile or accessible via alternative flows (export/email/share).
+- Prioritized device mix: Desktop-first (CONFIRMED). Mobile receives a lightweight experience only if stakeholder/user research prioritizes it; otherwise defer to post-MVP.
+- Breakpoint strategy: Use content-driven breakpoints as the primary approach (break at the point a component/layout fails), while keeping the proposed pixel values as a baseline token set for implementation:
+  - Mobile: 0–599px
+  - Tablet: 600–1023px
+  - Desktop: 1024–1439px
+  - Wide: 1440px+
+  Implement these as design tokens but allow components to override based on content needs.
+- Mobile feature gating: Block heavy features (full inline charting, large exports) on mobile by default; expose via alternative flows (export/share) or explicit user opt-in.
 
 ---
 
