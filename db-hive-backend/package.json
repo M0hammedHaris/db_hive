@@ -1,0 +1,9 @@
+{
+  "name": "db-hive-backend",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/health.js",
+  "scripts": {
+    "test": "node ./tests/unit/health.test.js && node ./tests/unit/telemetry.test.js"
+  }
+}
